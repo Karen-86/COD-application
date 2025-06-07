@@ -1,0 +1,21 @@
+.home-page {
+  /* background-color: rgb(160, 149, 121) rgb(169, 145, 115);   */
+  /* background: linear-gradient(to bottom, rgb(160, 149, 121) 0%, rgb(169, 145, 115) 100%); */
+
+  /* background: linear-gradient(to bottom, rgb(160, 149, 121) 0%, rgb(169, 145, 115) 100%); */
+  /* background: linear-gradient(to bottom, rgb(166, 155, 123) 0%, rgb(169, 145, 115) 100%); */
+
+  color: #2c2c2c;
+}
+
+.home-page button {
+  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3) !important;
+}
+
+.green-cover {
+  background-color: rgb(166, 155, 123);
+}
+
+.camel-cover {
+  background-color: rgb(169, 145, 115);
+}
