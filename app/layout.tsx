@@ -6,6 +6,7 @@ import AuthProvider from "@/contexts/AuthContext";
 import ApiProvider from "@/contexts/ApiContext";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/components/theme-provider";
+import Analytics from "./analytics";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -56,11 +57,28 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* GA scripts will go here */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-NKE1DC87XP"></script>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-NKE1DC87XP', {
+                page_path: window.location.pathname,
+              });
+            `,
+          }}
+        />
+      </head>
       <body className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
           <ApiProvider>
             <Provider>
               <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+                <Analytics />
                 {children}
               </ThemeProvider>
               <Toaster />
