@@ -111,7 +111,11 @@ const UserInfoBlock = () => {
           </div>
           <div className="flex items-center justify-between text-sm gap-5 py-1 px-3 border-b-1 border-dashed border-gray-300  mb-3">
             <div className="font-bold">Game Time (UTC):</div>
-            <div>{details.gameTime || "-"}</div>
+            <div>
+              {Array.isArray(details.gameTime)
+                ? details.gameTime.map((item: any) => item.label).join(", ") || "-"
+                : details.gameTime || "-"}
+            </div>
           </div>
           <div className="flex items-center justify-between text-sm gap-5 py-1 px-3 border-b-1 border-dashed border-gray-300  mb-3">
             <div className="font-bold">Main Unit Type:</div>

@@ -8,6 +8,7 @@ export { ModeToggle } from "./mode-toggle/ModeToggle.tsx";
 export { BreadcrumbDemo } from "./breadcrumb/BreadcrumbDemo.tsx";
 export { DialogDemo } from "./dialog/DialogDemo.tsx";
 export { SelectScrollable } from "./select/select-scrollable/SelectScrollable.tsx";
+export { DropdownMenuCheckboxes } from "./select/dropdown-menu-checkboxes/DropdownMenuCheckboxes.tsx";
 export { TableDemo } from "./table/TableDemo.tsx";
 export { default as ServiceCard } from "./cards/service-card/ServiceCard.tsx";
 export { default as HeroCard} from './cards/hero-card/HeroCard.tsx'

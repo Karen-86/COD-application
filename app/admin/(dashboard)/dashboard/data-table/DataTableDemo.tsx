@@ -63,6 +63,7 @@ export function DataTableDemo<TData extends IncludedProps, TValue>({
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = React.useState({});
   const [expandedRows, setExpandedRows] = React.useState<string[]>([]);
+  const { getUsers, fetchedUsers } = useApiContext();
 
   const table = useReactTable({
     data,
@@ -96,8 +97,44 @@ export function DataTableDemo<TData extends IncludedProps, TValue>({
     setExpandedRows((prev) => (prev.includes(rowId) ? prev.filter((id) => id !== rowId) : [...prev, rowId]));
   };
 
+  const [allianceActiveTime,setAllianceActiveTime] = React.useState('')
+
+  React.useEffect(() => {
+    let allGameTime: any = [];
+
+    fetchedUsers.list.forEach((user) => {
+      if (Array.isArray(user.gameTime)) {
+        allGameTime = [...allGameTime, ...user.gameTime];
+      }
+    });
+   const activeTime = getMostRepeatedByValue(allGameTime)
+    if(activeTime) setAllianceActiveTime(activeTime.label)
+    function getMostRepeatedByValue(arr: any) {
+      const countMap: Record<string, number> = {};
+
+      for (const item of arr) {
+        countMap[item.value] = (countMap[item.value] || 0) + 1;
+      }
+
+      let maxCount = 0;
+      let mostRepeatedValue = "";
+
+      for (const [value, count] of Object.entries(countMap)) {
+        if (count > maxCount) {
+          maxCount = count;
+          mostRepeatedValue = value;
+        }
+      }
+
+      return arr.find((item:any) => item.value === mostRepeatedValue);
+    }
+  }, [fetchedUsers]);
+
   return (
     <div className="w-full">
+      <div>
+        <strong className="font-medium text-gray-500">Alliance Activity Time:</strong> <span className="text-success">{allianceActiveTime}</span> 
+      </div>
       <div className="flex items-center py-4 gap-5">
         <Input
           placeholder="Filter names..."
@@ -275,8 +312,10 @@ const ExpandedRow = ({ row = [], columns = [] }: { row: any; columns: any }) => 
   const [artifacts, setArtifacts] = React.useState(row.artifacts?.filter((item: any) => item.isFeatured));
   const [units, setUnits] = React.useState(row.units?.filter((item: any) => item.isFeatured));
 
-  const {formatWithCommas} = useUtil()
-  const {fetchedCurrentUser: {details: fetchedCurrentUserDetails}} = useApiContext()
+  const { formatWithCommas } = useUtil();
+  const {
+    fetchedCurrentUser: { details: fetchedCurrentUserDetails },
+  } = useApiContext();
 
   const items: ItemsProps[] = [
     {
@@ -373,7 +412,7 @@ const ExpandedRow = ({ row = [], columns = [] }: { row: any; columns: any }) => 
                   <div className="flex items-center justify-between text-xs gap-5 px-3 border-b-1 border-dashed border-gray-300  mb-3">
                     <div className="font-bold">Country:</div>
                     <div>
-                         {(row.country &&
+                      {(row.country &&
                         ["admin", "superAdmin"].includes(fetchedCurrentUserDetails.role) &&
                         row.country) ||
                         "***"}
@@ -400,7 +439,11 @@ const ExpandedRow = ({ row = [], columns = [] }: { row: any; columns: any }) => 
                   </div>
                   <div className="flex items-center justify-between text-xs gap-5 px-3 border-b-1 border-dashed border-gray-300  mb-3">
                     <div className="font-bold">Game Time (UTC):</div>
-                    <div>{row.gameTime || "-"}</div>
+                    <div>
+                      {Array.isArray(row.gameTime)
+                        ? row.gameTime.map((item: any) => item.label).join(", ") || "-"
+                        : row.gameTime || "-"}
+                    </div>
                   </div>
                   <div className="flex items-center justify-between text-xs gap-5 px-3 border-b-1 border-dashed border-gray-300  mb-3">
                     <div className="font-bold">Main Troop Type:</div>

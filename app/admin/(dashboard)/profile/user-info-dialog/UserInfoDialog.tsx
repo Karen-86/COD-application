@@ -1,15 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import {
-  BreadcrumbDemo,
-  Separator,
-  HeroCard,
-  CustomParallaxCard,
-  ButtonDemo,
-  DialogDemo,
-  InputDemo,
-} from "@/components/index";
+import { ButtonDemo, DialogDemo, InputDemo, DropdownMenuCheckboxes } from "@/components/index";
 import localData from "@/localData";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Settings, Pencil, Expand } from "lucide-react";
@@ -22,10 +14,10 @@ type StateProps = {
   country: string;
   languages: string;
   faction: string;
-  gameTime: string;
   mainUnitType: string;
   unitLevel: string;
   power: string;
+  gameTime: any;
 };
 
 const UserInfoDialog = () => {
@@ -49,11 +41,13 @@ const UserInfoDialogContent = ({ closeDialog = () => {} }) => {
     country: "",
     languages: "",
     faction: "",
-    gameTime: "",
     mainUnitType: "",
     unitLevel: "",
     power: "",
+    gameTime: [],
   });
+
+
 
   const [isLoading, setIsLoading] = useState(false);
   const { fetchedPages, fetchedCurrentUser, updateUser, getUser } = useApiContext();
@@ -129,7 +123,7 @@ const UserInfoDialogContent = ({ closeDialog = () => {} }) => {
       country: details.country || "",
       languages: details.languages || "",
       faction: details.faction || "",
-      gameTime: details.gameTime || "",
+      gameTime: Array.isArray(details.gameTime) ? details.gameTime || [] : [],
       mainUnitType: details.mainUnitType || "",
       unitLevel: details.unitLevel || "",
       power: (details.power && formatWithCommas(details.power.toString())) || "",
@@ -140,7 +134,7 @@ const UserInfoDialogContent = ({ closeDialog = () => {} }) => {
     <div>
       <br />
       <form action="" onSubmit={onSubmit} className="">
-        <div className="wrapper grid grid-cols-1 sm:grid-cols-2 gap-x-7  mb-3">
+        <div className="wrapper grid grid-cols-1 sm:grid-cols-2 gap-x-7  mb-3 items-start">
           <InputDemo
             label="In-Game ID"
             placeholder="e.g., John Doe"
@@ -178,7 +172,7 @@ const UserInfoDialogContent = ({ closeDialog = () => {} }) => {
             className="mb-5"
             value={state.faction}
           />
-          <InputDemo
+          {/* <InputDemo
             label="Game Time"
             placeholder="e.g., 13:00 – 17:00 UTC"
             name="gameTime"
@@ -186,7 +180,8 @@ const UserInfoDialogContent = ({ closeDialog = () => {} }) => {
             callback={(e) => onChange(e)}
             className="mb-5"
             value={state.gameTime}
-          />
+          /> */}
+
           <InputDemo
             label="main Unit Type"
             placeholder="e.g., Archer"
@@ -215,6 +210,28 @@ const UserInfoDialogContent = ({ closeDialog = () => {} }) => {
             className="mb-5"
             value={state.power}
           />
+          <DropdownMenuCheckboxes
+            label="Game Time"
+            // placeholder="Select Game Time"
+            buttonName="Select Game Time"
+            triggerClassName="w-full mb-5"
+            contentClassName=""
+            defaultItems={utcHourOptions.map((i) => {
+              return {
+                id: i.id,
+                label: i.label,
+                value: i.value,
+                isChecked: state.gameTime.find((item: any) => item.id == i.id) ? true: false,
+              };
+            })}
+            callback={(checkedItems:any) => {
+              console.log(checkedItems);
+              setState((prev) => ({
+                ...prev,
+                gameTime: checkedItems,
+              }));
+            }}
+          />
         </div>
 
         <div className="button-group flex gap-2 justify-end">
@@ -227,3 +244,30 @@ const UserInfoDialogContent = ({ closeDialog = () => {} }) => {
 };
 
 export default UserInfoDialog;
+
+const utcHourOptions = [
+  { id: "utc_00", value: "00", label: "00:00 UTC" },
+  { id: "utc_01", value: "01", label: "01:00 UTC" },
+  { id: "utc_02", value: "02", label: "02:00 UTC" },
+  { id: "utc_03", value: "03", label: "03:00 UTC" },
+  { id: "utc_04", value: "04", label: "04:00 UTC" },
+  { id: "utc_05", value: "05", label: "05:00 UTC" },
+  { id: "utc_06", value: "06", label: "06:00 UTC" },
+  { id: "utc_07", value: "07", label: "07:00 UTC" },
+  { id: "utc_08", value: "08", label: "08:00 UTC" },
+  { id: "utc_09", value: "09", label: "09:00 UTC" },
+  { id: "utc_10", value: "10", label: "10:00 UTC" },
+  { id: "utc_11", value: "11", label: "11:00 UTC" },
+  { id: "utc_12", value: "12", label: "12:00 UTC" },
+  { id: "utc_13", value: "13", label: "13:00 UTC" },
+  { id: "utc_14", value: "14", label: "14:00 UTC" },
+  { id: "utc_15", value: "15", label: "15:00 UTC" },
+  { id: "utc_16", value: "16", label: "16:00 UTC" },
+  { id: "utc_17", value: "17", label: "17:00 UTC" },
+  { id: "utc_18", value: "18", label: "18:00 UTC" },
+  { id: "utc_19", value: "19", label: "19:00 UTC" },
+  { id: "utc_20", value: "20", label: "20:00 UTC" },
+  { id: "utc_21", value: "21", label: "21:00 UTC" },
+  { id: "utc_22", value: "22", label: "22:00 UTC" },
+  { id: "utc_23", value: "23", label: "23:00 UTC" },
+];
